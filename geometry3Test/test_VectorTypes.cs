@@ -17,7 +17,8 @@ namespace geometry3Test
         {
             List<int> testN = new List<int>() { 13, 215, 371, 1212, 23154, 5 * 32, 1024 * 32, 5 * 31, 1024 * 31, 5 * 33, 1024 * 33 };
 
-            foreach (int N in testN) {
+            foreach (int N in testN)
+            {
                 BitArray bits = new BitArray(N);
                 HBitArray hbits = new HBitArray(N);
 
@@ -25,7 +26,8 @@ namespace geometry3Test
 
                 List<int> values = new List<int>();
                 int set_count = 0;
-                for (int i = 0; i < N; i += jumps[i % jumps.Length]) {
+                for (int i = 0; i < N; i += jumps[i % jumps.Length])
+                {
                     if (bits[i] == false)
                         set_count++;
                     bits[i] = true;
@@ -38,7 +40,8 @@ namespace geometry3Test
 
                 // test iteration
                 int vi = 0;
-                foreach (int idx in hbits) {
+                foreach (int idx in hbits)
+                {
                     Debug.Assert(hbits[idx] == bits[idx]);
                     Debug.Assert(idx == values[vi]);
                     vi++;
@@ -51,12 +54,14 @@ namespace geometry3Test
 
         public static void test_rcvector()
         {
-            for (int ROUND = 0; ROUND < 2; ++ROUND) {
+            for (int ROUND = 0; ROUND < 2; ++ROUND)
+            {
                 RefCountVector vec = new RefCountVector();
 
                 int N = 10 + ROUND;
 
-                for (int k = 0; k < N; ++k) {
+                for (int k = 0; k < N; ++k)
+                {
                     int i = vec.allocate();
                     Debug.Assert(i == k);
                 }
@@ -64,13 +69,16 @@ namespace geometry3Test
                 Debug.Assert(vec.is_dense == true);
 
                 int counter = 0;
-                foreach (int i in vec) {
+                foreach (int i in vec)
+                {
                     Debug.Assert(i == counter++);
                 }
 
                 int removed = 0;
-                for (int k = 0; k < N; ++k) {
-                    if (k % 2 == 0) {
+                for (int k = 0; k < N; ++k)
+                {
+                    if (k % 2 == 0)
+                    {
                         vec.decrement(k);
                         ++removed;
                     }
@@ -81,7 +89,8 @@ namespace geometry3Test
                 System.Console.WriteLine("After remove:");
                 System.Console.WriteLine(vec.debug_print());
 
-                for (int k = 0; k < N; ++k) {
+                for (int k = 0; k < N; ++k)
+                {
                     if (k % 2 == 0)
                         Debug.Assert(vec.refCount(k) == 0);
                     else
@@ -90,7 +99,8 @@ namespace geometry3Test
 
                 System.Console.WriteLine("\niteration:");
                 int iter_count = 0;
-                foreach (int i in vec) {
+                foreach (int i in vec)
+                {
                     System.Console.Write(i.ToString() + ":" + vec.refCount(i) + " ");
                     iter_count++;
                 }
@@ -99,7 +109,8 @@ namespace geometry3Test
                 Debug.Assert(iter_count == N - removed);
 
                 // re-allocate
-                for (int k = 0; k < removed; ++k) {
+                for (int k = 0; k < removed; ++k)
+                {
                     int j = vec.allocate();
                     vec.increment(j);
                 }
@@ -131,7 +142,8 @@ namespace geometry3Test
             int MAXCOUNT = 100;
             int mod = 31337;
 
-            for (int kk = 0; kk < 3; ++kk) {
+            for (int kk = 0; kk < 3; ++kk)
+            {
                 if (kk == 1)
                     MAXCOUNT = MAXID / 10;
                 else if (kk == 2)
@@ -146,7 +158,8 @@ namespace geometry3Test
 
                 int count = 0;
                 int id = 0;
-                while (count < MAXCOUNT) {
+                while (count < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
 
                     PQ_Index.Enqueue(id, count);
@@ -167,7 +180,8 @@ namespace geometry3Test
                 System.Console.WriteLine("updating...");
 
                 id = 0; count = 0;
-                while (count++ < MAXCOUNT) {
+                while (count++ < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
                     float new_p = count + ((r.Next() % 1000) - 1000);
                     PQ_Index.Update(id, new_p);
@@ -179,7 +193,8 @@ namespace geometry3Test
 
                 System.Console.WriteLine("removing...");
 
-                while (PQ_Index.Count > 0) {
+                while (PQ_Index.Count > 0)
+                {
                     int index_id = PQ_Index.Dequeue();
                     TestDynamicNode node = PQ_Dynamic.Dequeue();
                     Util.gDevAssert(index_id == node.id);
@@ -210,7 +225,8 @@ namespace geometry3Test
             int rounds = 10;
 
             int iters = 25;
-            for ( int k = 0; k < iters; ++k ) {
+            for (int k = 0; k < iters; ++k)
+            {
                 System.Console.WriteLine("profile_pq: round {0}", k);
                 time_index_pq(MAXID, MAXCOUNT, mod, rounds, index_p);
                 GC.Collect();
@@ -235,24 +251,27 @@ namespace geometry3Test
             IndexPriorityQueue PQ_Index = new IndexPriorityQueue(MAXID);
             profiler.StopAndAccumulate("index_initialize");
 
-            for (int ri = 0; ri < rounds; ++ri) {
+            for (int ri = 0; ri < rounds; ++ri)
+            {
 
                 profiler.Start("index_push");
 
                 int count = 0;
                 int id = 0;
-                while (count < MAXCOUNT) {
+                while (count < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
                     PQ_Index.Enqueue(id, count);
                     count++;
                 }
-            
+
                 profiler.StopAndAccumulate("index_push");
                 profiler.Start("index_update");
 
                 Random r = new Random(31337);
                 id = 0; count = 0;
-                while (count++ < MAXCOUNT) {
+                while (count++ < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
                     float new_p = count + ((r.Next() % 1000) - 1000);
                     PQ_Index.Update(id, new_p);
@@ -261,7 +280,8 @@ namespace geometry3Test
                 profiler.StopAndAccumulate("index_update");
                 profiler.Start("index_pop");
 
-                while (PQ_Index.Count > 0) {
+                while (PQ_Index.Count > 0)
+                {
                     int index_id = PQ_Index.Dequeue();
                 }
 
@@ -285,13 +305,15 @@ namespace geometry3Test
             SparseObjectList<TestDynamicNode> IDMap = new SparseObjectList<TestDynamicNode>(MAXID, MAXCOUNT);
             profiler.StopAndAccumulate("dynam_initialize");
 
-            for (int ri = 0; ri < rounds; ++ri) {
+            for (int ri = 0; ri < rounds; ++ri)
+            {
 
                 profiler.Start("dynam_push");
 
                 int count = 0;
                 int id = 0;
-                while (count < MAXCOUNT) {
+                while (count < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
                     TestDynamicNode node = new TestDynamicNode(); //Dynamic_Pool.Allocate();
                     //node.Initialize(id);
@@ -306,7 +328,8 @@ namespace geometry3Test
 
                 Random r = new Random(31337);
                 id = 0; count = 0;
-                while (count++ < MAXCOUNT) {
+                while (count++ < MAXCOUNT)
+                {
                     id = (id + mod) % MAXID;
                     float new_p = count + ((r.Next() % 1000) - 1000);
                     PQ_Dynamic.Update(IDMap[id], new_p);
@@ -315,7 +338,8 @@ namespace geometry3Test
                 profiler.StopAndAccumulate("dynam_update");
                 profiler.Start("dynam_pop");
 
-                while (PQ_Dynamic.Count > 0) {
+                while (PQ_Dynamic.Count > 0)
+                {
                     TestDynamicNode node = PQ_Dynamic.Dequeue();
                     //if (rounds > 1)
                     //    Dynamic_Pool.Return(node);
@@ -350,7 +374,8 @@ namespace geometry3Test
             bool verbose = false;
 
             //int n = 1;
-            for (int i = 0; i < MAXID; ++i) {
+            for (int i = 0; i < MAXID; ++i)
+            {
                 //n = (n + 17) % 17;
                 int id = i;
                 float priority = 1.0f - (float)i / 10.0f;
@@ -367,8 +392,9 @@ namespace geometry3Test
             System.Console.WriteLine("Dequeing...");
 
 
-            for ( int i = 0; i < MAXID; ++i ) {
-                float newp = (float)((i + MAXID/2) % MAXID)  / 10.0f;
+            for (int i = 0; i < MAXID; ++i)
+            {
+                float newp = (float)((i + MAXID / 2) % MAXID) / 10.0f;
                 QIndex.Update(i, newp);
                 QDynamic.Update(dyn_nodes[i], newp);
                 //System.Console.WriteLine("UPDATE {0} {1}", QIndex.First, QDynamic.First.id);
@@ -379,7 +405,8 @@ namespace geometry3Test
             }
 
 
-            for ( int i = 0; i < MAXID; ++i ) {
+            for (int i = 0; i < MAXID; ++i)
+            {
                 int id = QIndex.Dequeue();
                 var node = QDynamic.Dequeue();
                 Util.gDevAssert(id == node.id);
